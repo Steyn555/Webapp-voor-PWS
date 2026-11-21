@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hoe verspreidt een virus zich?</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="phone" id="phone">
+
+    <!-- Statusbalk bovenin -->
+    <div class="statusbar" id="statusbar">
+      <span id="klok">12:00</span>
+      <span aria-hidden="true">5G &nbsp;▮▮▮</span>
+    </div>
+
+    <!-- Beginscherm -->
+    <div class="home" id="home">
+      <div class="apps">
+
+        <button class="appicon" data-app="app-virus">
+          <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+            <rect width="64" height="64" rx="15" fill="#e4572e"/>
+            <g stroke="#fff" stroke-width="4" stroke-linecap="round">
+              <path d="M32 10v8M32 46v8M10 32h8M46 32h8M16.5 16.5l5.7 5.7M41.8 41.8l5.7 5.7M47.5 16.5l-5.7 5.7M22.2 41.8l-5.7 5.7"/>
+            </g>
+            <circle cx="32" cy="32" r="13" fill="#fff"/>
+            <circle cx="27.5" cy="29" r="2.5" fill="#e4572e"/>
+            <circle cx="36" cy="35" r="3" fill="#e4572e"/>
+          </svg>
+          <span>VirusSim</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- App 1: de simulatie -->
+    <div class="app" id="app-virus" aria-hidden="true">
+      <!-- Balk bovenin de app met terugknop -->
+      <div class="appbar">
+        <button id="terug" hidden>‹ Menu</button>
+        <span id="titel"></span>
+      </div>
+
+      <div class="appbody">
+
+        <!-- Menu -->
+        <section class="page" id="p-menu">
+          <h1>VirusSim</h1>
+          <p class="lead">Ontdek hoe virussen zich verspreiden en hoe we pandemieën bestrijden.</p>
+
+          <div class="menu">
+            <button class="menuitem" data-page="p-sim">
+              <b>Simulatie</b>
+              <span>Laat zelf een virus zich verspreiden</span>
+            </button>
+            <button class="menuitem" data-page="p-virus">
+              <b>Wat is een virus?</b>
+              <span>Hoe werkt het en wat is het R-getal?</span>
+            </button>
+            <button class="menuitem" data-page="p-pandemie">
+              <b>Bekende pandemieën</b>
+              <span>Van de Spaanse griep tot covid-19</span>
+            </button>
+            <button class="menuitem" data-page="p-vaccin">
+              <b>Vaccins en groepsimmuniteit</b>
+              <span>Waarom vaccineren ook anderen beschermt</span>
+            </button>
+            <button class="menuitem" data-page="p-bigdata">
+              <b>Big Data en pandemieën</b>
+              <span>Hoe data helpen bij het bestrijden</span>
+            </button>
+            <button class="menuitem" data-page="p-over">
+              <b>Over deze app</b>
+              <span>Wie maakte het, en wat kan het model niet?</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Simulatie -->
+        <section class="page" id="p-sim" hidden>
+
+    <h1>Hoe verspreidt een virus zich?</h1>
+    <p class="lead">
+      Elk bolletje is een persoon. Eén persoon is besmet.
+      Pas de instellingen aan en kijk hoe de epidemie verloopt.
+      Zo zie je wat maatregelen en vaccinaties doen.
+    </p>
+
+    <div class="grid">
+
+      <!-- Links: simulatie, tellers en grafiek -->
+      <section class="box">
+        <canvas id="sim" width="600" height="340"
+                role="img" aria-label="Simulatie van bewegende mensen die elkaar besmetten"></canvas>
+
+        <div class="stats">
+          <span style="--c: var(--gezond)">Gezond: <b id="nS">0</b></span>
+          <span style="--c: var(--besmet)">Besmet: <b id="nI">0</b></span>
+          <span style="--c: var(--hersteld)">Hersteld: <b id="nR">0</b></span>
+          <span style="--c: var(--vaccin)">Gevaccineerd: <b id="nV">0</b></span>
+          <span style="--c: var(--overleden)">Overleden: <b id="nD">0</b></span>
+          <span>Dag: <b id="day">0</b></span>
+        </div>
+
+        <canvas id="chart" width="600" height="150"
+                role="img" aria-label="Grafiek van het aantal besmette mensen per dag"></canvas>
+
+        <p class="note" id="res" aria-live="polite">Druk op Start.</p>
+      </section>
+
+      <!-- Rechts: instellingen -->
+      <section class="box">
+
+        <div class="presets">
+          <button data-p="0">Geen maatregelen</button>
+          <button data-p="1">Afstand houden</button>
+          <button data-p="2">Vaccinatie</button>
+        </div>
+
+        <label>
+          Aantal mensen <b id="oN"></b>
+          <input id="N" type="range" min="50" max="400" step="10" value="250">
+        </label>
+
+        <label>
+          Kans op besmetting bij contact <b id="oP"></b>
+          <input id="P" type="range" min="5" max="100" step="5" value="60">
+        </label>
+
+        <label>
+          Ziekteduur (dagen) <b id="oT"></b>
+          <input id="T" type="range" min="3" max="20" value="10">
+        </label>
+
+        <label>
+          Mensen die thuisblijven <b id="oA"></b>
+          <input id="A" type="range" min="0" max="90" step="5" value="0">
+        </label>
+
+        <label>
+          Gevaccineerd bij de start <b id="oV"></b>
+          <input id="V" type="range" min="0" max="95" step="5" value="0">
+        </label>
+
+        <label>
+          Kans dat een besmette overlijdt <b id="oM"></b>
+          <input id="M" type="range" min="0" max="20" step="1" value="2">
+        </label>
+
+        <div class="btns">
+          <button class="main" id="go">Start</button>
+          <button id="pause">Pauze</button>
+        </div>
+
+        <div class="note">
+          <p>
+            Dit is een eenvoudig SIR-model: Susceptible (vatbaar), Infected (besmet),
+            Recovered (hersteld). Echte modellen gebruiken data over contacten, leeftijd
+            en reizen, maar het principe is hetzelfde.
+          </p>
+          <p>
+            Tip: een lagere piek betekent minder druk op ziekenhuizen.
+            Dat heet "flatten the curve".
+          </p>
+        </div>
+
+      </section>
+    </div>
+        </section>
+
+        <!-- Wat is een virus? -->
+        <section class="page" id="p-virus" hidden>
+          <h1>Wat is een virus?</h1>
+          <div class="box info">
+            <p>Een virus is een extreem klein deeltje met erfelijk materiaal (DNA of RNA) in een eiwitmantel. Een virus kan zich niet zelf vermenigvuldigen: het heeft cellen van een gastheer nodig. Of een virus "leeft", is een discussiepunt onder biologen.</p>
+
+            <h2>Hoe verspreidt het zich?</h2>
+            <ul>
+              <li>Via druppels en kleine deeltjes in de lucht (hoesten, praten)</li>
+              <li>Via aanraking van besmette mensen of oppervlakken</li>
+              <li>Via water of voedsel</li>
+              <li>Via dieren, bijvoorbeeld muggen bij dengue en gele koorts</li>
+            </ul>
+
+            <h2>Virus of bacterie?</h2>
+            <p>Antibiotica werken tegen bacteriën, maar niet tegen virussen. Tegen virussen gebruiken we vaccins en soms antivirale medicijnen.</p>
+
+            <h2>Mutaties</h2>
+            <p>Virussen veranderen soms een beetje bij het kopiëren van hun erfelijk materiaal. Zo ontstaan varianten. Dit gebeurt vooral bij RNA-virussen, zoals griep- en coronavirussen.</p>
+
+            <h2>Het R-getal</h2>
+            <p>Het reproductiegetal R is het gemiddelde aantal mensen dat één besmette persoon aansteekt. Is R groter dan 1, dan groeit de epidemie. Is R kleiner dan 1, dan neemt hij af. Bij mazelen is R0 (zonder maatregelen of immuniteit) ongeveer 12 tot 18, bij seizoensgriep ongeveer 1 tot 2.</p>
+          </div>
+        </section>
+
+        <!-- Bekende pandemieën -->
+        <section class="page" id="p-pandemie" hidden>
+          <h1>Bekende pandemieën</h1>
+          <div class="box info">
+            <h2>Spaanse griep (1918 tot 1920)</h2>
+            <p>Een influenzavirus (H1N1). Naar schatting stierven er tientallen miljoenen mensen. De schattingen lopen uiteen, vaak wordt zo'n 50 miljoen genoemd.</p>
+
+            <h2>Aziatische griep (1957) en Hongkonggriep (1968)</h2>
+            <p>Twee influenzapandemieën. Naar schatting kostte elk van de twee een tot enkele miljoenen levens.</p>
+
+            <h2>Hiv/aids (sinds begin jaren tachtig)</h2>
+            <p>Het hiv-virus tast het afweersysteem aan. Tegenwoordig kunnen medicijnen het virus goed onder controle houden.</p>
+
+            <h2>Pokken</h2>
+            <p>In 1980 door de WHO uitgeroepen tot uitgeroeid, dankzij vaccinatie. Voor zover bekend is dit de enige infectieziekte bij mensen die is uitgeroeid.</p>
+
+            <h2>Covid-19 (vanaf 2020)</h2>
+            <p>De WHO riep op 11 maart 2020 een pandemie uit. Er kwamen binnen ongeveer een jaar vaccins. Data speelden een grote rol: dashboards, modellen, rioolwateronderzoek en contactonderzoek.</p>
+          </div>
+        </section>
+
+        <!-- Vaccins -->
+        <section class="page" id="p-vaccin" hidden>
+          <h1>Vaccins en groepsimmuniteit</h1>
+          <div class="box info">
+            <h2>Hoe werkt een vaccin?</h2>
+            <p>Een vaccin leert je afweersysteem een virus te herkennen, zonder dat je ziek wordt. Komt het echte virus later, dan reageert je lichaam sneller.</p>
+
+            <h2>Groepsimmuniteit</h2>
+            <p>Als genoeg mensen immuun zijn, kan het virus zich moeilijk verspreiden. Dan worden ook mensen beschermd die zich niet kunnen laten vaccineren, bijvoorbeeld baby's of mensen met een zwakke afweer.</p>
+
+            <h2>Hoeveel mensen zijn genoeg?</h2>
+            <p>Ongeveer 1 − 1/R0 van de bevolking. Bij R0 = 3 is dat ongeveer 67%. Bij een virus met een hoge R0, zoals mazelen, moet bijna iedereen immuun zijn.</p>
+
+            <h2>Probeer het zelf</h2>
+            <p>Zet in de simulatie het percentage gevaccineerde mensen steeds hoger en kijk hoe de piek kleiner wordt.</p>
+          </div>
+        </section>
+
+        <!-- Big Data -->
+        <section class="page" id="p-bigdata" hidden>
+          <h1>Big Data en pandemieën</h1>
+          <div class="box info">
+            <h2>Vroeg signaleren</h2>
+            <p>Door grote hoeveelheden gegevens te analyseren (nieuws, vliegroutes, meldingen van artsen) kun je een uitbraak soms eerder zien. Het Canadese bedrijf BlueDot waarschuwde eind 2019 al voor het virus in Wuhan.</p>
+
+            <h2>Verspreiding volgen</h2>
+            <p>Modellen en dashboards, zoals dat van Johns Hopkins University, gaven tijdens corona een live overzicht. Mobiliteitsdata lieten zien of maatregelen werkten.</p>
+
+            <h2>Contactonderzoek</h2>
+            <p>Apps zoals CoronaMelder gebruikten bluetooth om mensen te waarschuwen die in de buurt van een besmet persoon waren geweest.</p>
+
+            <h2>Rioolwater</h2>
+            <p>Het RIVM meet virusdeeltjes in rioolwater. Dat laat trends zien, ook van mensen die zich niet laten testen.</p>
+
+            <h2>Virus en varianten</h2>
+            <p>Door het erfelijk materiaal van het virus op grote schaal te analyseren zie je nieuwe varianten snel opduiken.</p>
+
+            <h2>Nadelen en discussie</h2>
+            <ul>
+              <li>Privacy: wie mag jouw locatiegegevens gebruiken?</li>
+              <li>Slechte of onvolledige data</li>
+              <li>Modellen kunnen er naast zitten. Google Flu Trends voorspelde griepgolven later te hoog.</li>
+              <li>Ongelijkheid tussen landen met en zonder goede dataverzameling</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Over deze app -->
+        <section class="page" id="p-over" hidden>
+          <h1>Over deze app</h1>
+          <div class="box info">
+            <h2>Waarvoor is het gemaakt?</h2>
+            <p>VirusSim is gemaakt voor een profielwerkstuk over de vraag hoe Big Data kan helpen bij het bestrijden van pandemieën.</p>
+
+            <h2>Gemaakt door</h2>
+            <p><span id="maker">[vul hier je naam in]</span></p>
+            <p>De code is geschreven met hulp van Claude, een AI-assistent van Anthropic.</p>
+
+            <h2>Wat kan het model niet?</h2>
+            <ul>
+              <li>Het is een sterk vereenvoudigd SIR-model, geen echte voorspelling.</li>
+              <li>Mensen bewegen willekeurig en er zijn geen leeftijden, steden of ziekenhuizen.</li>
+              <li>Er is geen incubatietijd en iedereen heeft dezelfde kans om besmet te raken.</li>
+              <li>Vaccinatie beschermt in het model altijd voor 100%. In het echt is dat meestal minder.</li>
+            </ul>
+
+            <h2>Meer lezen</h2>
+            <p>Zoek voor betrouwbare cijfers bij het RIVM, de WHO en Johns Hopkins University.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Home-balk onderin: terug naar het beginscherm -->
+    <div class="homebar">
+      <button id="homeknop" aria-label="Terug naar het beginscherm"></button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+  <script src="home.js"></script>
+</body>
+
+</html>
