@@ -93,7 +93,7 @@
     <div class="grid">
 
       <!-- Links: simulatie, tellers en grafiek -->
-      <section class="box">
+      <section class="box" aria-label="Simulatieresultaten">
         <canvas id="sim" width="600" height="340"
                 role="img" aria-label="Simulatie van bewegende mensen die elkaar besmetten"></canvas>
 
@@ -113,7 +113,9 @@
       </section>
 
       <!-- Rechts: instellingen -->
-      <section class="box">
+      <section class="box" aria-label="Simulatie-instellingen">
+        <h2 class="settings-title">Kies je aanpak</h2>
+        <p class="settings-help">Kies een voorbeeld om direct te starten, of stel de waarden zelf in.</p>
 
         <div class="presets">
           <button data-p="0">Geen maatregelen</button>
@@ -152,8 +154,8 @@
         </label>
 
         <div class="btns">
-          <button class="main" id="go">Start</button>
-          <button id="pause">Pauze</button>
+          <button class="main" id="go">Start simulatie</button>
+          <button id="pause">Pauzeer</button>
         </div>
 
         <div class="note">

@@ -281,13 +281,13 @@
   $('go').addEventListener('click', function () {
     reset();
     loopt = true;
-    $('pause').textContent = 'Pauze';
+    $('pause').textContent = 'Pauzeer';
   });
 
   $('pause').addEventListener('click', function () {
     if (klaar || !mensen.length) return;
     loopt = !loopt;
-    this.textContent = loopt ? 'Pauze' : 'Verder';
+    this.textContent = loopt ? 'Pauzeer' : 'Verdergaan';
   });
 
   // Voorbeelden: geen maatregelen, afstand houden, vaccinatie
@@ -311,7 +311,7 @@
   document.addEventListener('app-gesloten', function () {
     if (loopt) {
       loopt = false;
-      $('pause').textContent = 'Verder';
+      $('pause').textContent = 'Verdergaan';
     }
   });
 
