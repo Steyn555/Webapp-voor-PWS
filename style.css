@@ -11,6 +11,7 @@
   --hersteld: #8a8fa8;
   --vaccin: #7b61c9;
   --overleden: #222222;
+  --accent: #1f6f8b;
 
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
@@ -30,6 +31,7 @@
     --hersteld: #9aa0bd;
     --vaccin: #a58bf0;
     --overleden: #eeeeee;
+    --accent: #5bb3d1;
   }
 }
 
@@ -58,6 +60,7 @@ h1 {
   font-size: clamp(1.6rem, 4vw, 2.3rem);
   line-height: 1.15;
   letter-spacing: -0.02em;
+  color: var(--accent);
 }
 
 .lead {
@@ -78,6 +81,10 @@ h1 {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 12px;
+}
+
+.box.info {
+  border-top: 3px solid var(--accent);
 }
 
 /* ---------- Simulatie en grafiek ---------- */
@@ -129,7 +136,7 @@ label b {
 
 input[type="range"] {
   width: 100%;
-  accent-color: var(--gezond);
+  accent-color: var(--accent);
 }
 
 .presets {
@@ -157,7 +164,7 @@ button {
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.16s ease, border-color 0.16s ease,
-    box-shadow 0.16s ease, transform 0.16s ease;
+    box-shadow 0.16s ease, transform 0.16s ease, color 0.16s ease;
 }
 
 button.main {
@@ -171,6 +178,13 @@ button.main {
   min-width: 0;
   padding: 8px;
   font-size: 0.82rem;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btns button:not(.main) {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 button:focus-visible,
@@ -184,6 +198,13 @@ input:focus-visible {
   border-color: var(--besmet);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
+}
+
+.presets button:hover,
+.btns button:not(.main):hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
 }
 
 button.main:hover {
@@ -515,8 +536,8 @@ body {
   gap: 12px;
   min-height: 40px;
   padding: 4px 16px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  border-bottom: 2px solid var(--accent);
 }
 
 .appbar button {
@@ -530,6 +551,7 @@ body {
 
 .appbar span {
   font-weight: 600;
+  color: var(--accent);
 }
 
 .menu {
@@ -545,10 +567,11 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
-  padding: 14px 52px 14px 16px;
+  padding: 14px 52px 14px 12px;
   text-align: left;
   background: var(--panel);
   border: 1px solid var(--line);
+  border-left: 4px solid var(--vaccin);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
@@ -590,6 +613,7 @@ body {
 .settings-title {
   margin: 0 0 4px;
   font-size: 1.15rem;
+  color: var(--vaccin);
 }
 
 .settings-help {
@@ -617,10 +641,15 @@ body {
 .info h2 {
   margin: 16px 0 4px;
   font-size: 1.05rem;
+  color: var(--vaccin);
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
 }
 
 .info h2:first-child {
   margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 .info p {
