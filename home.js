@@ -36,6 +36,8 @@
   toonTijd();
   setInterval(toonTijd, 20000);
 
+  var appbody = document.querySelector('.appbody');
+
   /* ---------- Laadpagina → Beginpagina ---------- */
   function toonBeginpagina() {
     laadpagina.classList.add('verberg');
@@ -49,8 +51,21 @@
     }, 600);
   }
 
-  // Na ~2,2 seconden van laadpagina naar beginpagina
-  setTimeout(toonBeginpagina, 2200);
+  var autostart = new URLSearchParams(window.location.search).get('autostart') === '1';
+
+  if (autostart) {
+    laadpagina.classList.add('verberg');
+    laadpagina.hidden = true;
+    beginpagina.classList.remove('toon');
+    beginpagina.hidden = true;
+    app.classList.add('open');
+    app.setAttribute('aria-hidden', 'false');
+    statusbalk.classList.add('in-app');
+    homebalk.classList.add('in-app');
+  } else {
+    // Na ~2,2 seconden van laadpagina naar beginpagina
+    setTimeout(toonBeginpagina, 2200);
+  }
 
   /* ---------- Beginpagina → Landingspagina ---------- */
   function openApp() {
@@ -81,16 +96,29 @@
 
     terugknop.hidden = (id === 'p-menu');
     titel.textContent = titels[id];
-    app.scrollTop = 0;
+    if (appbody) appbody.scrollTop = 0;
     huidige = id;
 
-    // Landingspagina-animatie opnieuw starten telkens als het menu getoond wordt
+    document.dispatchEvent(new CustomEvent('pagina-gewijzigd', { detail: { id: id } }));
+
+    // Landingspagina-animatie of pagina-entree opnieuw starten
     if (id === 'p-menu') {
       var menu = document.getElementById('p-menu');
       menu.classList.remove('animeer');
       void menu.offsetWidth;
       menu.classList.add('animeer');
+    } else {
+      var doel = document.getElementById(id);
+      if (doel) {
+        doel.classList.remove('page-enter');
+        void doel.offsetWidth;
+        doel.classList.add('page-enter');
+      }
     }
+  }
+
+  if (autostart) {
+    toonPagina('p-menu');
   }
 
   document.querySelectorAll('.menuitem').forEach(function (knop) {

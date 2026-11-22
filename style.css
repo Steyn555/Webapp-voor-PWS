@@ -46,13 +46,22 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: #e9f1fc;
   color: var(--ink);
-  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 16px/1.5 "Avenir Next", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0a101d;
+  }
 }
 
 .appbody {
-  padding: 12px 16px 24px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 6px 16px 16px;
 }
 
 h1 {
@@ -91,6 +100,10 @@ h1 {
 canvas {
   display: block;
   width: 100%;
+}
+
+#sim,
+#chart {
   background: var(--bg);
   border-radius: 8px;
 }
@@ -274,8 +287,18 @@ body {
 }
 
 .statusbar.in-app {
+  background: #041368;
+  color: #ffffff;
+  transition: background-color 0.24s ease, color 0.24s ease;
+}
+
+.statusbar.in-app.sheet-full {
   background: var(--bg);
   color: var(--ink);
+}
+
+[hidden] {
+  display: none !important;
 }
 
 /* ---------- Laadpagina (splash-screen) ---------- */
@@ -450,14 +473,16 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- App (landingspagina + content) ---------- */
+/* ---------- App (kaart van Nederland bovenin + onderste blad met pagina's) ---------- */
 .app {
   position: absolute;
   inset: 0;
   z-index: 1;
-  padding: calc(40px + env(safe-area-inset-top, 0px)) 0 34px;
-  overflow-y: auto;
-  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: calc(32px + env(safe-area-inset-top, 0px));
+  background: #041368;
   opacity: 0;
   visibility: hidden;
   transform: scale(0.96);
@@ -470,25 +495,289 @@ body {
   transform: none;
 }
 
+.app.sheet-full {
+  background: var(--bg);
+}
+
+/* ---------- Interactieve kaart van Nederland ---------- */
+.map-shell {
+  position: relative;
+  flex: 0 0 50%;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  background: #041368;
+  overflow: hidden;
+  transition: flex-basis 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.app.sheet-full .map-shell {
+  flex-basis: 0;
+  min-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.map-topbar {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 14px 4px;
+  padding: 4px 14px 4px 10px;
+  min-height: 44px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #0e1a36;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0, 8, 48, 0.28);
+}
+
+.map-topbar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.map-topbar-icon svg {
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(14, 26, 54, 0.08);
+}
+
+.map-region-btn {
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+  padding: 4px 6px;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: #0e1a36;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-region-btn:hover {
+  background: rgba(4, 19, 104, 0.06);
+  transform: none;
+}
+
+.map-top-metric {
+  flex: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #3f4b66;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.map-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+#nl-map-svg,
+#nl-map-radar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#nl-map-radar {
+  background: transparent;
+  border-radius: 0;
+  pointer-events: none;
+}
+
+.nl-neighbor {
+  fill: #134a1c;
+  stroke: #266b2f;
+  stroke-width: 0.8;
+}
+
+.nl-province {
+  cursor: pointer;
+  outline: none;
+}
+
+.nl-province-shape {
+  fill: #1b7d24;
+  stroke: #9bd63b;
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  transition: fill 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease;
+}
+
+.nl-province:hover .nl-province-shape,
+.nl-province:focus-visible .nl-province-shape {
+  stroke: #ffffff;
+  stroke-width: 2;
+  filter: brightness(1.15);
+}
+
+.nl-province.is-selected .nl-province-shape {
+  stroke: #ffe44d;
+  stroke-width: 2.4;
+  filter: brightness(1.2);
+}
+
+.nl-pin-halo {
+  fill: rgba(255, 228, 77, 0.34);
+  stroke: #ffffff;
+  stroke-width: 1.4;
+}
+
+.nl-pin-core {
+  fill: #e4572e;
+  stroke: #ffffff;
+  stroke-width: 1.2;
+}
+
+.map-day-label {
+  position: absolute;
+  top: 6px;
+  left: 16px;
+  z-index: 3;
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.map-layer-pill {
+  position: absolute;
+  left: 14px;
+  bottom: 28px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #0e1a36;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 8, 48, 0.28);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.map-layer-icon {
+  flex: none;
+  color: #0e2494;
+}
+
+.map-layer-pill select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  color: #0e1a36;
+  font: inherit;
+  font-weight: 600;
+  padding: 8px 18px 8px 2px;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, #0e1a36 50%),
+    linear-gradient(135deg, #0e1a36 50%, transparent 50%);
+  background-position: calc(100% - 7px) 52%, calc(100% - 2px) 52%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* ---------- Onderste blad (Bottom Sheet) ---------- */
+.sheet {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  min-height: 0;
+  margin-top: -18px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -8px 28px rgba(0, 8, 48, 0.22);
+  overflow: hidden;
+  transition: margin-top 0.24s ease, border-radius 0.24s ease;
+}
+
+.app.sheet-full .sheet {
+  margin-top: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.sheet-handle {
+  flex: none;
+  width: 100%;
+  min-height: 30px;
+  padding: 10px 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.sheet-handle:active {
+  cursor: grabbing;
+}
+
+.sheet-handle:hover {
+  transform: none;
+}
+
+.sheet-grab {
+  display: block;
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.app.sheet-full #p-menu .lead {
+  display: none;
+}
+
+.app.sheet-full #p-menu h1 {
+  margin-bottom: 14px;
+}
+
 /* ---------- Landingspagina: menu-items animeren ---------- */
 #p-menu.animeer h1 {
-  animation: fadeUp 0.5s ease 0.25s both;
+  animation: fadeUp 0.5s ease 0.1s both;
 }
 
 #p-menu.animeer .lead {
-  animation: fadeUp 0.5s ease 0.30s both;
+  animation: fadeUp 0.5s ease 0.16s both;
 }
 
 #p-menu.animeer .menuitem {
-  animation: fadeUp 0.5s ease both;
+  animation: fadeUp 0.45s ease both;
 }
 
-#p-menu.animeer .menuitem:nth-child(1) { animation-delay: 0.35s; }
-#p-menu.animeer .menuitem:nth-child(2) { animation-delay: 0.42s; }
-#p-menu.animeer .menuitem:nth-child(3) { animation-delay: 0.49s; }
-#p-menu.animeer .menuitem:nth-child(4) { animation-delay: 0.56s; }
-#p-menu.animeer .menuitem:nth-child(5) { animation-delay: 0.63s; }
-#p-menu.animeer .menuitem:nth-child(6) { animation-delay: 0.70s; }
+#p-menu.animeer .menuitem:nth-child(1) { animation-delay: 0.18s; }
+#p-menu.animeer .menuitem:nth-child(2) { animation-delay: 0.23s; }
+#p-menu.animeer .menuitem:nth-child(3) { animation-delay: 0.28s; }
+#p-menu.animeer .menuitem:nth-child(4) { animation-delay: 0.33s; }
+#p-menu.animeer .menuitem:nth-child(5) { animation-delay: 0.38s; }
+#p-menu.animeer .menuitem:nth-child(6) { animation-delay: 0.43s; }
 
 /* ---------- Home-balk ---------- */
 .homebar {
@@ -500,9 +789,11 @@ body {
   display: flex;
   justify-content: center;
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
 }
 
 .homebar button {
+  pointer-events: auto;
   flex: none;
   width: 130px;
   height: 22px;
@@ -528,21 +819,25 @@ body {
 
 /* ---------- Menu en pagina's in de app ---------- */
 .appbar {
-  position: sticky;
-  top: 0;
-  z-index: 2;
+  flex: none;
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 40px;
-  padding: 4px 16px;
+  min-height: 44px;
+  padding: 2px 16px 6px;
   background: var(--panel);
   border-bottom: 2px solid var(--accent);
+  touch-action: none;
+}
+
+.appbar:has(#terug[hidden]) {
+  display: none;
 }
 
 .appbar button {
   flex: none;
-  padding: 6px 0;
+  min-height: 40px;
+  padding: 6px 4px;
   background: none;
   border: 0;
   color: var(--besmet);
@@ -665,16 +960,35 @@ body {
   display: none;
 }
 
+.page.page-enter {
+  animation: pageEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .app,
   .laadpagina,
-  .beginpagina {
+  .beginpagina,
+  .map-shell,
+  .sheet,
+  .statusbar.in-app {
     transition: none;
   }
   .laad-logo,
   .laad-balk,
   .beginpagina.toon *,
-  #p-menu.animeer * {
+  #p-menu.animeer *,
+  .page.page-enter {
     animation: none !important;
   }
   button,

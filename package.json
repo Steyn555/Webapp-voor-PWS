@@ -1,0 +1,16 @@
+{
+  "name": "virussim",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VirusSim - Interactieve simulatie en informatie-app over virusverspreiding en pandemieën",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node -e \"console.log('Static site ready')\"",
+    "lint": "node --check server.js && node --check script.js && node --check home.js && node --check nl-map-data.js && node --check nl-map.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}

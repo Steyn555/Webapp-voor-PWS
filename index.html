@@ -56,20 +56,65 @@
       <button class="begin-knop" id="begin-knop">Begin</button>
     </div>
 
-    <!-- De app: landingspagina + alle onderwerpen -->
+    <!-- De app: interactieve kaart van Nederland bovenin + onderste blad met alle pagina's -->
     <div class="app" id="app-virus" aria-hidden="true">
-      <!-- Balk bovenin de app met terugknop -->
-      <div class="appbar">
-        <button id="terug" hidden>‹ Terug</button>
-        <span id="titel"></span>
-      </div>
 
-      <div class="appbody">
+      <!-- Interactieve kaart van Nederland (altijd boven alle pagina's) -->
+      <section class="map-shell" id="nl-map-shell" aria-label="Interactieve kaart van Nederland">
+        <div class="map-topbar">
+          <span class="map-topbar-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="26" height="26">
+              <rect width="64" height="64" rx="15" fill="#ffffff"/>
+              <g stroke="#e4572e" stroke-width="4" stroke-linecap="round">
+                <path d="M32 10v8M32 46v8M10 32h8M46 32h8M16.5 16.5l5.7 5.7M41.8 41.8l5.7 5.7M47.5 16.5l-5.7 5.7M22.2 41.8l-5.7 5.7"/>
+              </g>
+              <circle cx="32" cy="32" r="13" fill="#e4572e"/>
+              <circle cx="27.5" cy="29" r="2.5" fill="#ffffff"/>
+              <circle cx="36" cy="35" r="3" fill="#ffffff"/>
+            </svg>
+          </span>
+          <button type="button" id="map-region-reset" class="map-region-btn">
+            <span id="map-region-name">Nederland</span>
+          </button>
+          <span id="map-top-metric" class="map-top-metric">162</span>
+        </div>
 
-        <!-- Landingspagina (menu met alle opties) -->
-        <section class="page" id="p-menu">
-          <h1>VirusSim</h1>
-          <p class="lead">Kies een onderwerp om te beginnen.</p>
+        <div class="map-stage" id="nl-map-stage" data-testid="nl-map-stage">
+          <svg id="nl-map-svg" viewBox="0 0 400 360" preserveAspectRatio="xMidYMid meet"
+               role="group" aria-label="Kaart van Nederlandse provincies"></svg>
+          <canvas id="nl-map-radar" aria-hidden="true"></canvas>
+
+          <div class="map-day-label" id="map-day-label">Nu</div>
+
+          <label class="map-layer-pill" for="map-layer">
+            <svg class="map-layer-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <select id="map-layer" aria-label="Kies kaartlaag"></select>
+          </label>
+        </div>
+      </section>
+
+      <!-- Onderste blad met navigatie en alle pagina's -->
+      <div class="sheet" id="app-sheet">
+        <button type="button" id="sheet-toggle" class="sheet-handle"
+                aria-label="Sleep of tik om de pagina omhoog of omlaag te schuiven" aria-expanded="false">
+          <span class="sheet-grab" aria-hidden="true"></span>
+        </button>
+
+        <!-- Balk bovenin het blad met terugknop -->
+        <div class="appbar" id="appbar">
+          <button type="button" id="terug" hidden>‹ Terug</button>
+          <span id="titel"></span>
+        </div>
+
+        <div class="appbody">
+
+          <!-- Landingspagina (menu met alle opties onder de kaart) -->
+          <section class="page" id="p-menu">
+            <h1>VirusSim</h1>
+            <p class="lead">Kies een onderwerp om te beginnen.</p>
 
           <div class="menu">
             <button class="menuitem" data-page="p-sim">
@@ -310,6 +355,7 @@
           </div>
         </section>
 
+        </div>
       </div>
     </div>
 
@@ -322,6 +368,7 @@
 
   <script src="script.js"></script>
   <script src="home.js"></script>
+  <script type="module" src="nl-map.js"></script>
 </body>
 
 </html>
