@@ -1,4 +1,261 @@
-/* ---------- Laadpagina, beginpagina en landingspagina met animaties ---------- */
+/* ---------- Kleuren (licht en donker) ---------- */
+:root {
+  --bg: #f6f8f7;
+  --panel: #ffffff;
+  --ink: #16211d;
+  --mute: #5b6b65;
+  --line: #dbe3df;
+
+  --gezond: #2f8f83;
+  --besmet: #e4572e;
+  --hersteld: #8a8fa8;
+  --vaccin: #7b61c9;
+  --overleden: #222222;
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101715;
+    --panel: #18221f;
+    --ink: #e8efec;
+    --mute: #9bada6;
+    --line: #2a3833;
+
+    --gezond: #4cc2b2;
+    --besmet: #ff7a4d;
+    --hersteld: #9aa0bd;
+    --vaccin: #a58bf0;
+    --overleden: #eeeeee;
+  }
+}
+
+/* ---------- Basis ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.appbody {
+  padding: 12px 16px 24px;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  max-width: 62ch;
+  margin: 0 0 18px;
+  color: var(--mute);
+}
+
+/* ---------- Indeling ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.box {
+  padding: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+/* ---------- Simulatie en grafiek ---------- */
+canvas {
+  display: block;
+  width: 100%;
+  background: var(--bg);
+  border-radius: 8px;
+}
+
+#sim {
+  aspect-ratio: 600 / 340;
+}
+
+#chart {
+  aspect-ratio: 600 / 150;
+  margin-top: 10px;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 10px 0 0;
+  font-size: 0.92rem;
+}
+
+.stats span::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  background: var(--c);
+  border-radius: 50%;
+}
+
+/* ---------- Instellingen ---------- */
+label {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.92rem;
+}
+
+label b {
+  float: right;
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--gezond);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+button {
+  flex: 1;
+  min-height: 44px;
+  padding: 10px 12px;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.16s ease, border-color 0.16s ease,
+    box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+button.main {
+  background: var(--besmet);
+  border-color: var(--besmet);
+  color: #ffffff;
+}
+
+.presets button {
+  flex: none;
+  min-width: 0;
+  padding: 8px;
+  font-size: 0.82rem;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--vaccin);
+  outline-offset: 2px;
+}
+
+.btns button:hover,
+.presets button:hover {
+  border-color: var(--besmet);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+button.main:hover {
+  background: #c94825;
+  border-color: #c94825;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* ---------- Tekst onderaan ---------- */
+.note {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: var(--mute);
+}
+
+.note p {
+  margin: 0 0 8px;
+}
+
+#res {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+
+/* ---------- Telefoon ---------- */
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+}
+
+.phone {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 100dvh;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1f6f8b, #7b61c9 55%, #e4572e);
+}
+
+@media (min-width: 500px) {
+  .phone {
+    height: min(820px, calc(100dvh - 32px));
+    border: 8px solid #111111;
+    border-radius: 44px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ---------- Statusbalk ---------- */
+.statusbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 24px 6px;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.statusbar.in-app {
+  background: var(--bg);
+  color: var(--ink);
+}
 
 /* ---------- Laadpagina (splash-screen) ---------- */
 .laadpagina {
@@ -172,6 +429,26 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ---------- App (landingspagina + content) ---------- */
+.app {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: calc(40px + env(safe-area-inset-top, 0px)) 0 34px;
+  overflow-y: auto;
+  background: var(--bg);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.96);
+  transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+}
+
+.app.open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
 /* ---------- Landingspagina: menu-items animeren ---------- */
 #p-menu.animeer h1 {
   animation: fadeUp 0.5s ease 0.25s both;
@@ -192,36 +469,187 @@
 #p-menu.animeer .menuitem:nth-child(5) { animation-delay: 0.63s; }
 #p-menu.animeer .menuitem:nth-child(6) { animation-delay: 0.70s; }
 
-/* ---------- App aanpassingen (zonder icoon-open-animatie) ---------- */
-.app {
-  z-index: 1;
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(0.96);
-  transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+/* ---------- Home-balk ---------- */
+.homebar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  justify-content: center;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
-.app.open {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
+.homebar button {
+  flex: none;
+  width: 130px;
+  height: 22px;
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 
-/* Statusbalk altijd bovenaan */
-.statusbar {
-  z-index: 20;
+.homebar button::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 5px;
+  margin-top: 8px;
+  background: #ffffff;
+  border-radius: 3px;
+}
+
+.homebar.in-app button::after {
+  background: var(--ink);
+}
+
+
+/* ---------- Menu en pagina's in de app ---------- */
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 4px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.appbar button {
+  flex: none;
+  padding: 6px 0;
+  background: none;
+  border: 0;
+  color: var(--besmet);
+  font-weight: 600;
+}
+
+.appbar span {
+  font-weight: 600;
+}
+
+.menu {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.menu .menuitem {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 14px 52px 14px 16px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.menu .menuitem::after {
+  content: "›";
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--mute);
+  background: var(--bg);
+  border-radius: 50%;
+  font-size: 1.35rem;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.menu .menuitem span {
+  color: var(--mute);
+  font-size: 0.88rem;
+}
+
+.menu .menuitem:hover {
+  border-color: var(--besmet);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.menu .menuitem:hover::after {
+  color: #ffffff;
+  background: var(--besmet);
+}
+
+.settings-title {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+}
+
+.settings-help {
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.9rem;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.presets button {
+  min-height: 52px;
+  line-height: 1.25;
+}
+
+.btns button {
+  min-height: 48px;
+}
+
+.info h2 {
+  margin: 16px 0 4px;
+  font-size: 1.05rem;
+}
+
+.info h2:first-child {
+  margin-top: 0;
+}
+
+.info p {
+  margin: 0 0 8px;
+}
+
+.info ul {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+
+.page[hidden] {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .app,
+  .laadpagina,
+  .beginpagina {
+    transition: none;
+  }
   .laad-logo,
   .laad-balk,
   .beginpagina.toon *,
   #p-menu.animeer * {
     animation: none !important;
   }
-  .app,
-  .laadpagina,
-  .beginpagina {
+  button,
+  .menu .menuitem {
     transition: none;
   }
 }
