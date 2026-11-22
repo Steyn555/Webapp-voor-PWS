@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Hoe verspreidt een virus zich?</title>
+  <title>VirusSim</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -17,40 +17,59 @@
       <span aria-hidden="true">5G &nbsp;▮▮▮</span>
     </div>
 
-    <!-- Beginscherm -->
-    <div class="home" id="home">
-      <div class="apps">
-
-        <button class="appicon" data-app="app-virus">
-          <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
-            <rect width="64" height="64" rx="15" fill="#e4572e"/>
-            <g stroke="#fff" stroke-width="4" stroke-linecap="round">
-              <path d="M32 10v8M32 46v8M10 32h8M46 32h8M16.5 16.5l5.7 5.7M41.8 41.8l5.7 5.7M47.5 16.5l-5.7 5.7M22.2 41.8l-5.7 5.7"/>
-            </g>
-            <circle cx="32" cy="32" r="13" fill="#fff"/>
-            <circle cx="27.5" cy="29" r="2.5" fill="#e4572e"/>
-            <circle cx="36" cy="35" r="3" fill="#e4572e"/>
-          </svg>
-          <span>VirusSim</span>
-        </button>
-
+    <!-- Laadpagina (splash-screen bij het openen) -->
+    <div class="laadpagina" id="laadpagina">
+      <div class="laad-logo">
+        <svg viewBox="0 0 64 64" width="96" height="96" aria-hidden="true">
+          <rect width="64" height="64" rx="15" fill="#ffffff"/>
+          <g stroke="#e4572e" stroke-width="4" stroke-linecap="round">
+            <path d="M32 10v8M32 46v8M10 32h8M46 32h8M16.5 16.5l5.7 5.7M41.8 41.8l5.7 5.7M47.5 16.5l-5.7 5.7M22.2 41.8l-5.7 5.7"/>
+          </g>
+          <circle cx="32" cy="32" r="13" fill="#e4572e"/>
+          <circle cx="27.5" cy="29" r="2.5" fill="#ffffff"/>
+          <circle cx="36" cy="35" r="3" fill="#ffffff"/>
+        </svg>
       </div>
+      <h1 class="laad-titel">VirusSim</h1>
+      <p class="laad-ondertitel">Hoe verspreidt een virus zich?</p>
+      <div class="laad-voortgang">
+        <div class="laad-balk"></div>
+      </div>
+      <p class="laad-tekst">Laden…</p>
     </div>
 
-    <!-- App 1: de simulatie -->
+    <!-- Beginpagina (welkomstscherm na het laden) -->
+    <div class="beginpagina" id="beginpagina" hidden>
+      <div class="begin-logo">
+        <svg viewBox="0 0 64 64" width="88" height="88" aria-hidden="true">
+          <rect width="64" height="64" rx="15" fill="#ffffff"/>
+          <g stroke="#e4572e" stroke-width="4" stroke-linecap="round">
+            <path d="M32 10v8M32 46v8M10 32h8M46 32h8M16.5 16.5l5.7 5.7M41.8 41.8l5.7 5.7M47.5 16.5l-5.7 5.7M22.2 41.8l-5.7 5.7"/>
+          </g>
+          <circle cx="32" cy="32" r="13" fill="#e4572e"/>
+          <circle cx="27.5" cy="29" r="2.5" fill="#ffffff"/>
+          <circle cx="36" cy="35" r="3" fill="#ffffff"/>
+        </svg>
+      </div>
+      <h1 class="begin-titel">VirusSim</h1>
+      <p class="begin-ondertitel">Ontdek hoe virussen zich verspreiden<br>en hoe we pandemieën bestrijden.</p>
+      <button class="begin-knop" id="begin-knop">Begin</button>
+    </div>
+
+    <!-- De app: landingspagina + alle onderwerpen -->
     <div class="app" id="app-virus" aria-hidden="true">
       <!-- Balk bovenin de app met terugknop -->
       <div class="appbar">
-        <button id="terug" hidden>‹ Menu</button>
+        <button id="terug" hidden>‹ Terug</button>
         <span id="titel"></span>
       </div>
 
       <div class="appbody">
 
-        <!-- Menu -->
+        <!-- Landingspagina (menu met alle opties) -->
         <section class="page" id="p-menu">
           <h1>VirusSim</h1>
-          <p class="lead">Ontdek hoe virussen zich verspreiden en hoe we pandemieën bestrijden.</p>
+          <p class="lead">Kies een onderwerp om te beginnen.</p>
 
           <div class="menu">
             <button class="menuitem" data-page="p-sim">
@@ -216,7 +235,7 @@
             <p>In 1980 door de WHO uitgeroepen tot uitgeroeid, dankzij vaccinatie. Voor zover bekend is dit de enige infectieziekte bij mensen die is uitgeroeid.</p>
 
             <h2>Covid-19 (vanaf 2020)</h2>
-            <p>De WHO riep op 11 maart 2020 een pandemie uit. Er kwamen binnen ongeveer een jaar vaccins. Data speelden een grote rol: dashboards, modellen, rioolwateronderzoek en contactonderzoek.</p>
+            <p>De WHO riep op 11 maart 2020 een pandemie uit. Er kwamen binnen ongeveer een jaar vaccins. Data speelden een grote rol: dashboards, modellen, rioalwateronderzoek en contactonderzoek.</p>
           </div>
         </section>
 
@@ -251,8 +270,8 @@
             <h2>Contactonderzoek</h2>
             <p>Apps zoals CoronaMelder gebruikten bluetooth om mensen te waarschuwen die in de buurt van een besmet persoon waren geweest.</p>
 
-            <h2>Rioolwater</h2>
-            <p>Het RIVM meet virusdeeltjes in rioolwater. Dat laat trends zien, ook van mensen die zich niet laten testen.</p>
+            <h2>Rioalwater</h2>
+            <p>Het RIVM meet virusdeeltjes in rioalwater. Dat laat trends zien, ook van mensen die zich niet laten testen.</p>
 
             <h2>Virus en varianten</h2>
             <p>Door het erfelijk materiaal van het virus op grote schaal te analyseren zie je nieuwe varianten snel opduiken.</p>
