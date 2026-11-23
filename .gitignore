@@ -1,0 +1,6 @@
+# Afhankelijkheden (worden via npm/bun geinstalleerd)
+node_modules/
+
+# Lokale bestanden
+.DS_Store
+*.log

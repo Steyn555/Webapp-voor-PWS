@@ -93,6 +93,8 @@
             </svg>
             <select id="map-layer" aria-label="Kies kaartlaag"></select>
           </label>
+
+          <div class="map-legend" id="map-legend" aria-hidden="true"></div>
         </div>
       </section>
 
@@ -114,9 +116,24 @@
           <!-- Landingspagina (menu met alle opties onder de kaart) -->
           <section class="page" id="p-menu">
             <h1>VirusSim</h1>
-            <p class="lead">Kies een onderwerp om te beginnen.</p>
+            <p class="lead">Bekijk de cijfers, of ontdek meer over virussen en pandemieën.</p>
 
           <div class="menu">
+            <p class="menu-groep-label">Cijfers &amp; analyse</p>
+            <button class="menuitem" data-page="p-dashboard">
+              <b>Dashboard</b>
+              <span>Actuele cijfers en trends</span>
+            </button>
+            <button class="menuitem" data-page="p-statistiek">
+              <b>Statistieken</b>
+              <span>Vergelijk provincies en weken</span>
+            </button>
+            <button class="menuitem" data-page="p-voorspelling">
+              <b>Voorspelling</b>
+              <span>Verwachting voor de komende weken (demo)</span>
+            </button>
+
+            <p class="menu-groep-label">Ontdek &amp; simulatie</p>
             <button class="menuitem" data-page="p-sim">
               <b>Simulatie</b>
               <span>Laat zelf een virus zich verspreiden</span>
@@ -238,6 +255,148 @@
     </div>
         </section>
 
+        <!-- Dashboard (VirusMonitor) -->
+        <section class="page" id="p-dashboard" hidden>
+          <h1>Dashboard</h1>
+          <p class="lead">Actuele cijfers per regio. Tik op een provincie op de kaart om die regio te bekijken.</p>
+
+          <div class="filterbar">
+            <label class="filter-select">
+              <span>Regio</span>
+              <select id="dash-regio" aria-label="Kies regio"></select>
+            </label>
+            <div class="pillgroup" id="dash-periode" role="group" aria-label="Periode">
+              <button type="button" data-days="7">7 dagen</button>
+              <button type="button" data-days="30" class="is-actief" aria-pressed="true">30 dagen</button>
+              <button type="button" data-days="90">90 dagen</button>
+            </div>
+          </div>
+
+          <div class="statgrid" id="dash-cards"></div>
+
+          <section class="box chartbox">
+            <h2>Nieuwe besmettingen per dag</h2>
+            <p class="chart-sub">Per 100.000 inwoners, 7-daags gemiddelde</p>
+            <canvas id="dash-chart" role="img" aria-label="Lijngrafiek van nieuwe besmettingen per dag"></canvas>
+          </section>
+
+          <section class="box">
+            <h2>Stijgers van deze week</h2>
+            <p class="chart-sub">Grootste toename ten opzichte van vorige week</p>
+            <div class="risers" id="dash-risers"></div>
+          </section>
+
+          <p class="demo-note">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 7.6h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+            Alle cijfers in dit dashboard zijn verzonnen demo-data voor dit profielwerkstuk.
+          </p>
+        </section>
+
+        <!-- Statistieken -->
+        <section class="page" id="p-statistiek" hidden>
+          <h1>Statistieken</h1>
+          <p class="lead">Vergelijk provincies en bekijk het verloop per week.</p>
+
+          <div class="pillgroup breed" id="stat-metric" role="group" aria-label="Kies statistiek">
+            <button type="button" data-metric="besmettingen" class="is-actief" aria-pressed="true">Besmettingen</button>
+            <button type="button" data-metric="rgetal" aria-pressed="false">R-getal</button>
+            <button type="button" data-metric="vaccin" aria-pressed="false">Vaccinatie</button>
+            <button type="button" data-metric="rioolwater" aria-pressed="false">Rioolwater</button>
+          </div>
+
+          <section class="box">
+            <h2>Provincies vergeleken</h2>
+            <p class="chart-sub" id="stat-bars-sub">Besmettingen per 100.000 inwoners, afgelopen week</p>
+            <div class="bars" id="stat-bars"></div>
+          </section>
+
+          <section class="box">
+            <h2>Verloop per week</h2>
+            <p class="chart-sub">Nederland, nieuwe besmettingen per 100.000 per week</p>
+            <div class="bars week" id="stat-weeks"></div>
+          </section>
+
+          <section class="box">
+            <h2>Gegevenstabel</h2>
+            <div class="tablewrap">
+              <table class="datatable" id="stat-table">
+                <thead>
+                  <tr>
+                    <th data-key="naam" data-type="tekst">Provincie</th>
+                    <th data-key="inwoners" data-type="getal">Inwoners</th>
+                    <th data-key="cases7" data-type="getal" class="is-sort">Besmettingen</th>
+                    <th data-key="r" data-type="getal">R-getal</th>
+                    <th data-key="vaccin" data-type="getal">Vaccinatie</th>
+                    <th data-key="rioolwater" data-type="getal">Rioolwater</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <p class="chart-sub">Tik op een kolomkop om te sorteren. Besmettingen per 100.000, afgelopen week.</p>
+          </section>
+
+          <section class="box">
+            <h2>Naar leeftijdsgroep</h2>
+            <p class="chart-sub" id="stat-age-sub">Verdeling van besmettingen naar leeftijd (demo)</p>
+            <div class="bars age" id="stat-age"></div>
+          </section>
+
+          <p class="demo-note">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 7.6h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+            Alle cijfers op deze pagina zijn verzonnen demo-data voor dit profielwerkstuk.
+          </p>
+        </section>
+
+        <!-- Voorspelling (demo-model) -->
+        <section class="page" id="p-voorspelling" hidden>
+          <h1>Voorspelling</h1>
+
+          <div class="demo-banner" role="note">
+            <svg class="demo-banner-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 9v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 17h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+            <p><b>Demo-voorspelling.</b> Deze cijfers komen uit een simpel rekenmodel met nep-data. Geen echte AI en geen echte kijk in de toekomst.</p>
+          </div>
+
+          <div class="filterbar">
+            <label class="filter-select">
+              <span>Regio</span>
+              <select id="vsp-regio" aria-label="Kies regio"></select>
+            </label>
+            <div class="pillgroup" id="vsp-horizon" role="group" aria-label="Vooruitkijken">
+              <button type="button" data-days="7" class="is-actief" aria-pressed="true">1 week</button>
+              <button type="button" data-days="14" aria-pressed="false">2 weken</button>
+              <button type="button" data-days="28" aria-pressed="false">4 weken</button>
+            </div>
+          </div>
+
+          <div class="pillgroup breed" id="vsp-scenario" role="group" aria-label="Scenario">
+            <button type="button" data-scenario="trend" class="is-actief" aria-pressed="true">Huidige trend</button>
+            <button type="button" data-scenario="maatregelen" aria-pressed="false">Maatregelen</button>
+            <button type="button" data-scenario="variant" aria-pressed="false">Nieuwe variant</button>
+          </div>
+          <p class="chart-sub scenario-uitleg" id="vsp-scenario-uitleg">Het R-getal blijft zoals het nu is.</p>
+
+          <section class="box chartbox">
+            <h2>Verwachting besmettingen</h2>
+            <p class="chart-sub">Per 100.000 per dag · geschiedenis en voorspelling met onzekerheidsmarge</p>
+            <canvas id="vsp-chart" role="img" aria-label="Grafiek met voorspelling van besmettingen en onzekerheidsmarge"></canvas>
+          </section>
+
+          <div class="statgrid" id="vsp-cards"></div>
+          <p class="voorspelling-conclusie" id="vsp-conclusie" aria-live="polite"></p>
+
+          <section class="box info">
+            <h2>Hoe werkt deze voorspelling?</h2>
+            <p>Het model kijkt naar het R-getal: het aantal mensen dat &eacute;&eacute;n besmette persoon gemiddeld aansteekt. Is R groter dan 1, dan vermenigvuldigen de besmettingen zich elke generatie (ongeveer 4 dagen) met R.</p>
+            <p>Verder vooruit kijken wordt onzekerder. Daarom tekent de grafiek een grijze band rond de lijn: hoe breder de band, hoe minder zeker de voorspelling.</p>
+            <p>Echte voorspellingen, zoals die van het RIVM, gebruiken veel meer data: leeftijden, contacten, vaccinaties en reisgedrag. Dit demo-model gebruikt alleen het R-getal.</p>
+          </section>
+        </section>
+
         <!-- Wat is een virus? -->
         <section class="page" id="p-virus" hidden>
           <h1>Wat is een virus?</h1>
@@ -356,6 +515,26 @@
         </section>
 
         </div>
+
+        <!-- Tabbalk: snel wisselen tussen kaart, dashboard, statistieken en voorspelling -->
+        <nav class="tabbar" id="tabbar" aria-label="Hoofdnavigatie">
+          <button type="button" class="tab is-actief" data-tab="p-menu" aria-current="page">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Kaart</span>
+          </button>
+          <button type="button" class="tab" data-tab="p-dashboard">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="5" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="12" width="7" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="16" width="7" height="5" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            <span>Dashboard</span>
+          </button>
+          <button type="button" class="tab" data-tab="p-statistiek">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 21h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="5" y="10" width="3.6" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10.2" y="5" width="3.6" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><rect x="15.4" y="13" width="3.6" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            <span>Statistiek</span>
+          </button>
+          <button type="button" class="tab" data-tab="p-voorspelling">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M2 17l6.5-6.5 4.5 4.5L22 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 6.5h6v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Voorspelling</span>
+          </button>
+        </nav>
       </div>
     </div>
 
@@ -369,6 +548,7 @@
   <script src="script.js"></script>
   <script src="home.js"></script>
   <script type="module" src="nl-map.js"></script>
+  <script type="module" src="monitor.js"></script>
 </body>
 
 </html>

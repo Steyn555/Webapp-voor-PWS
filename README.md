@@ -14,11 +14,9 @@ The project is developed as part of a school research project (PWS).
 
 ## Live Website
 
-**Website:** [Open VirusMonitor](JOUW_GITHUB_PAGES_URL)
+**Website:** [Open VirusMonitor](https://steyn555.github.io/Webapp-voor-PWS/)
 
-**Source Code:** [GitHub Repository](JOUW_GITHUB_REPOSITORY_URL)
-
-*The application is currently under development. Not all features are available yet.*
+**Source Code:** [GitHub Repository](https://github.com/Steyn555/Webapp-voor-PWS)
 
 ---
 
@@ -41,16 +39,17 @@ The main objectives are:
 
 ## Features
 
-The following features are planned or currently under development.
+The current version is a working front-end demo: all figures are fabricated demo data (inspired by the format of real RIVM/CBS statistics), clearly labelled as such in the app. No external APIs are called and everything runs in the browser.
 
 | Feature | Description | Status |
 |---|---|---|
-| Dashboard | Overview of important epidemiological statistics | In Development |
-| Interactive Map | Visualisation of infection rates per municipality | Planned |
-| Statistics | Historical infection data and trends | Planned |
-| AI Predictions | Predicting future infection rates | Planned |
-| Municipality Filters | Explore data for individual municipalities | Planned |
-| Mobile Interface | Responsive design for smartphones and tablets | In Development |
+| Dashboard | Overview of important epidemiological statistics | Demo available |
+| Interactive Map | Visualisation of infection rates per province | Demo available |
+| Statistics | Historical infection data and trends | Demo available |
+| AI Predictions | Predicting future infection rates (demo, clearly labelled) | Demo available |
+| Region Filters | Explore data per province and period | Demo available |
+| Virus Simulation | Interactive SIR model with measures and vaccination | Available |
+| Mobile Interface | Responsive design for smartphones and tablets | Available |
 
 Feature statuses will be updated as development progresses.
 
@@ -59,6 +58,8 @@ Feature statuses will be updated as development progresses.
 ## Technologies
 
 VirusMonitor uses several programming languages, frameworks and libraries.
+
+The current implementation is plain HTML, CSS and JavaScript without a build step, so it can be hosted directly on GitHub Pages. The technologies below are planned for later versions of the platform.
 
 ### Frontend
 
@@ -98,6 +99,8 @@ VirusMonitor uses several programming languages, frameworks and libraries.
 ## Data Sources
 
 The project uses publicly available data from reliable sources.
+
+**Note:** the current demo version does not yet load real data. All numbers shown in the app are fabricated demo values, modelled after the way real RIVM and CBS figures are structured. Real datasets will be integrated in a later version.
 
 ### RIVM
 
@@ -140,32 +143,21 @@ The objective is to make historical data and model predictions accessible and ea
 
 ## Project Structure
 
-The project structure may evolve during development. The following is the intended organisation:
+The project structure may evolve during development. The current repository contains the front-end demo:
 
 ```text
-VirusMonitor/
+Webapp-voor-PWS/
 │
-├── frontend/
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       ├── services/
-│       ├── hooks/
-│       └── utils/
-│
-├── backend/
-│   ├── data/
-│   ├── models/
-│   ├── prediction.py
-│   └── train.py
-│
-├── notebooks/
-│   └── experiments.ipynb
-│
-├── docs/
-│   └── documentation.md
-│
+├── index.html        # all pages of the app (phone layout)
+├── style.css         # styling, including light/dark theme
+├── home.js           # navigation between pages (menu and tab bar)
+├── script.js         # the SIR virus simulation
+├── nl-map.js         # interactive map of the Netherlands
+├── nl-map-data.js    # map data for the provinces
+├── monitor.js        # dashboard, statistics and prediction pages
+├── monitor-data.js   # demo data for the monitor
+├── server.js         # local development server (Express)
+├── *.test.mjs        # unit tests for the data modules
 └── README.md
 ```
 
@@ -183,28 +175,31 @@ VirusMonitor/
 ### Clone the Repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/Steyn555/Webapp-voor-PWS.git
+cd Webapp-voor-PWS
 ```
 
-Navigate to the project directory.
-
-### Start the Frontend
-
-When the React/Vite environment is configured:
+### Start the Development Server
 
 ```bash
-cd frontend
 npm install
 npm run dev
 ```
 
-The development server will provide a local address, usually:
+The development server will provide a local address:
 
 ```text
-http://localhost:5173
+http://localhost:3000
 ```
 
-Open this address in your browser to view the application.
+Open this address in your browser to view the application. You can also open `index.html` directly in your browser or use the VS Code extension Live Preview.
+
+### Tests and Checks
+
+```bash
+npm test       # unit tests for the map and monitor data
+npm run lint   # syntax check of all JavaScript files
+```
 
 ---
 
@@ -212,12 +207,12 @@ Open this address in your browser to view the application.
 
 The following improvements are planned for future development.
 
+- [x] Implement an interactive map of the Netherlands (demo).
+- [x] Visualise historical infection data (demo).
 - [ ] Complete the frontend.
 - [ ] Improve the responsive mobile interface.
-- [ ] Implement an interactive map of the Netherlands.
 - [ ] Collect and process RIVM datasets.
 - [ ] Integrate CBS demographic data.
-- [ ] Visualise historical infection data.
 - [ ] Develop initial epidemiological models.
 - [ ] Train a machine learning model.
 - [ ] Compare predictions with actual data.
@@ -231,7 +226,7 @@ The following improvements are planned for future development.
 
 VirusMonitor is an educational and experimental research project.
 
-Predictions depend on the availability and quality of the underlying data, as well as assumptions made by the mathematical and machine learning models.
+All figures in the current version are fabricated demo data. Predictions depend on the availability and quality of the underlying data, as well as assumptions made by the mathematical and machine learning models.
 
 The results are estimates and should not be interpreted as official health advice or professional epidemiological forecasts.
 

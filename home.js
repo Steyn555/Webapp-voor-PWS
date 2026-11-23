@@ -17,6 +17,9 @@
 
   var titels = {
     'p-menu': '',
+    'p-dashboard': 'Dashboard',
+    'p-statistiek': 'Statistieken',
+    'p-voorspelling': 'Voorspelling',
     'p-sim': 'Simulatie',
     'p-virus': 'Wat is een virus?',
     'p-pandemie': 'Pandemieën',
@@ -95,9 +98,20 @@
     });
 
     terugknop.hidden = (id === 'p-menu');
-    titel.textContent = titels[id];
+    titel.textContent = titels[id] || '';
     if (appbody) appbody.scrollTop = 0;
     huidige = id;
+
+    /* Tabbalk bijwerken: Kaart = menu/kaartweergave */
+    document.querySelectorAll('.tabbar .tab').forEach(function (tab) {
+      var actief = tab.dataset.tab === id;
+      tab.classList.toggle('is-actief', actief);
+      if (actief) {
+        tab.setAttribute('aria-current', 'page');
+      } else {
+        tab.removeAttribute('aria-current');
+      }
+    });
 
     document.dispatchEvent(new CustomEvent('pagina-gewijzigd', { detail: { id: id } }));
 
@@ -107,6 +121,10 @@
       menu.classList.remove('animeer');
       void menu.offsetWidth;
       menu.classList.add('animeer');
+      // Elke menu-item krijgt zijn eigen vertraging (werkt met elk aantal items)
+      menu.querySelectorAll('.menuitem').forEach(function (item, i) {
+        item.style.animationDelay = (0.16 + i * 0.05) + 's';
+      });
     } else {
       var doel = document.getElementById(id);
       if (doel) {
@@ -124,6 +142,13 @@
   document.querySelectorAll('.menuitem').forEach(function (knop) {
     knop.addEventListener('click', function () {
       toonPagina(knop.dataset.page);
+    });
+  });
+
+  /* Tabbalk onderin: Kaart, Dashboard, Statistiek, Voorspelling */
+  document.querySelectorAll('.tabbar .tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      toonPagina(tab.dataset.tab);
     });
   });
 
