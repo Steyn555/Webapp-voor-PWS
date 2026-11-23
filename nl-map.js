@@ -3,6 +3,7 @@ import {
   SURROUNDING_PATHS,
   PROVINCES,
   LAYERS,
+  LAYER_STYLES,
   getProvinceById,
   getProvinceMetric,
   getNationalSummary,
@@ -20,6 +21,7 @@ import {
   const regionNameEl = document.getElementById('map-region-name');
   const topMetricEl = document.getElementById('map-top-metric');
   const layerSelect = document.getElementById('map-layer');
+  const legendEl = document.getElementById('map-legend');
   const sheetToggle = document.getElementById('sheet-toggle');
   const appbar = document.getElementById('appbar');
 
@@ -115,28 +117,29 @@ import {
     }
   });
 
+  // Andere onderdelen (dashboard/voorspelling) mogen de regio instellen
+  document.addEventListener('monitor-regio', (e) => {
+    const id = e.detail && e.detail.id ? e.detail.id : null;
+    if (id !== state.selectedProvinceId) {
+      state.selectedProvinceId = id && getProvinceById(id) ? id : null;
+      updateUI();
+    }
+  });
+
   function getProvinceTint(metric, layerId) {
-    if (!metric) return '#1d7d24';
-    if (layerId === 'vaccin') {
-      const mix = Math.round(metric.intensity * 40);
-      return `rgb(22, ${110 + mix}, ${48 + Math.round(mix * 0.5)})`;
-    }
-    if (layerId === 'rgetal') {
-      return metric.level === 'hoog'
-        ? '#267e26'
-        : metric.level === 'matig'
-        ? '#1d7624'
-        : '#186823';
-    }
-    return metric.level === 'hoog'
-      ? '#218426'
-      : metric.level === 'matig'
-      ? '#1b7924'
-      : '#166b22';
+    const stijl = LAYER_STYLES[layerId] || LAYER_STYLES.besmettingen;
+    if (!metric) return stijl.colors.laag;
+    return stijl.colors[metric.level] || stijl.colors.laag;
   }
 
   function updateUI() {
     const selected = getProvinceById(state.selectedProvinceId);
+
+    document.dispatchEvent(
+      new CustomEvent('kaart-regio', {
+        detail: { id: selected ? selected.id : null },
+      })
+    );
 
     if (selected) {
       const metric = getProvinceMetric(selected.id, state.layerId);
@@ -178,7 +181,36 @@ import {
       app.dataset.mapLayer = state.layerId;
     }
 
+    renderLegenda();
     drawRadar();
+  }
+
+  /* ---------- Legenda bij de kaart ---------- */
+  function renderLegenda() {
+    if (!legendEl) return;
+    const stijl = LAYER_STYLES[state.layerId] || LAYER_STYLES.besmettingen;
+    const niveaus = ['laag', 'matig', 'hoog'];
+
+    legendEl.innerHTML = '';
+    for (const niveau of niveaus) {
+      const item = document.createElement('span');
+      item.className = 'map-legend-item';
+
+      const swatch = document.createElement('i');
+      swatch.className = 'map-legend-swatch';
+      swatch.style.background = stijl.colors[niveau];
+
+      const naam = document.createElement('b');
+      naam.textContent = niveau.charAt(0).toUpperCase() + niveau.slice(1);
+
+      const bereik = document.createElement('em');
+      bereik.textContent = stijl.labels[niveau];
+
+      item.appendChild(swatch);
+      item.appendChild(naam);
+      item.appendChild(bereik);
+      legendEl.appendChild(item);
+    }
   }
 
   function resizeCanvas() {

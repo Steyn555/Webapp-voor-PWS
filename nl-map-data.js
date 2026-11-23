@@ -14,6 +14,35 @@ export const LAYERS = [
   { id: 'rioolwater', label: 'Rioolwater', unit: '×10¹²', shortLabel: 'Rioolwater' },
 ];
 
+/* Kleuren en drempels per laag, gedeeld door de kaart,
+   de legenda en de staafdiagrammen (zelfde niveaus als getProvinceMetric). */
+export const LAYER_STYLES = {
+  besmettingen: {
+    upIsBad: true,
+    unit: 'per 100.000 / week',
+    colors: { laag: '#2f8f83', matig: '#e9b44c', hoog: '#e4572e' },
+    labels: { laag: '< 130', matig: '130 \u2013 179', hoog: '\u2265 180' },
+  },
+  rgetal: {
+    upIsBad: true,
+    unit: '',
+    colors: { laag: '#2f8f83', matig: '#e9b44c', hoog: '#e4572e' },
+    labels: { laag: 'R < 1,0', matig: 'R 1,0 \u2013 1,2', hoog: 'R \u2265 1,2' },
+  },
+  vaccin: {
+    upIsBad: false,
+    unit: '% gevaccineerd',
+    colors: { laag: '#b8a8ea', matig: '#9b7fe0', hoog: '#7b61c9' },
+    labels: { laag: '< 74%', matig: '74 \u2013 79%', hoog: '\u2265 80%' },
+  },
+  rioolwater: {
+    upIsBad: true,
+    unit: '×10¹² virusdeeltjes',
+    colors: { laag: '#5bb3d1', matig: '#e9b44c', hoog: '#ff7a4d' },
+    labels: { laag: '< 3,0', matig: '3,0 \u2013 4,4', hoog: '\u2265 4,5' },
+  },
+};
+
 export const PROVINCES = [
   {
     id: 'groningen',
