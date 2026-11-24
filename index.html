@@ -95,6 +95,40 @@
           </label>
 
           <div class="map-legend" id="map-legend" aria-hidden="true"></div>
+
+          <!-- Bediening: vergrootglas + zoom + sluiten (grote weergave) -->
+          <div class="map-controls" role="group" aria-label="Kaartbediening">
+            <button type="button" id="map-magnifier" class="map-ctrl map-ctrl-magnifier" aria-label="Kaart vergroten" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                <path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button type="button" id="map-zoom-in" class="map-ctrl" aria-label="Inzoomen">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button type="button" id="map-zoom-out" class="map-ctrl" aria-label="Uitzoomen">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button type="button" id="map-zoom-reset" class="map-ctrl" aria-label="Zoom terugzetten op heel Nederland">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 3-6.7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M3 4v5h5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <span class="map-zoom-indicator" id="map-zoom-indicator" aria-live="off">1.0×</span>
+          </div>
+
+          <!-- Sluitknop voor de grote kaartweergave -->
+          <button type="button" id="map-fullscreen-close" class="map-fullscreen-close" aria-label="Grote weergave sluiten" hidden>
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path d="M6 6 18 18M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
       </section>
 
