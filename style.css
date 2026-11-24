@@ -613,34 +613,68 @@ body {
 .nl-province-shape {
   fill: #1b7d24;
   stroke: #9bd63b;
-  stroke-width: 1.1;
+  stroke-width: 0.9;
   stroke-linejoin: round;
-  transition: fill 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1.2px 1.2px rgba(0, 8, 48, 0.35));
+  transition: fill 0.22s ease, stroke 0.18s ease, stroke-width 0.18s ease,
+    filter 0.22s ease, opacity 0.22s ease;
 }
 
 .nl-province:hover .nl-province-shape,
 .nl-province:focus-visible .nl-province-shape {
   stroke: #ffffff;
-  stroke-width: 2;
-  filter: brightness(1.15);
+  stroke-width: 1.8;
+  filter: brightness(1.18) drop-shadow(0 1.4px 2.2px rgba(0, 8, 48, 0.45));
 }
 
 .nl-province.is-selected .nl-province-shape {
   stroke: #ffe44d;
-  stroke-width: 2.4;
-  filter: brightness(1.2);
+  stroke-width: 2.6;
+  filter: brightness(1.22) drop-shadow(0 0 5px rgba(255, 228, 77, 0.65));
+  animation: provincieGeselecteerd 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes provincieGeselecteerd {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+/* Subtiele water-achtergrond */
+.nl-water-bg {
+  fill: url(#nl-water-gradient);
+}
+
+/* Donkerder, rustigere achtergrond voor de kaart */
+.map-shell {
+  background:
+    radial-gradient(circle at 30% 18%, rgba(91, 179, 209, 0.18), transparent 55%),
+    radial-gradient(circle at 70% 85%, rgba(123, 97, 201, 0.16), transparent 60%),
+    linear-gradient(165deg, #051a52 0%, #041368 55%, #06103f 100%);
+}
+
+.app.sheet-full .map-shell {
+  background: var(--bg);
 }
 
 .nl-pin-halo {
-  fill: rgba(255, 228, 77, 0.34);
+  fill: rgba(255, 228, 77, 0.4);
   stroke: #ffffff;
-  stroke-width: 1.4;
+  stroke-width: 1.2;
+  animation: pinPulse 2.4s ease-in-out infinite;
 }
 
 .nl-pin-core {
   fill: #e4572e;
   stroke: #ffffff;
   stroke-width: 1.2;
+  filter: drop-shadow(0 1px 2px rgba(0, 8, 48, 0.5));
+}
+
+@keyframes pinPulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.12); }
 }
 
 .map-day-label {
@@ -1064,11 +1098,36 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 9px 11px;
-  background: rgba(255, 255, 255, 0.93);
-  border-radius: 11px;
-  box-shadow: 0 4px 14px rgba(0, 8, 48, 0.28);
+  padding: 9px 11px 8px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 8, 48, 0.32), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
   pointer-events: none;
+  backdrop-filter: blur(6px);
+}
+
+.map-legend-title {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #0e2494;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(14, 36, 148, 0.18);
+  padding-bottom: 3px;
+}
+
+.map-legend-demo {
+  margin-top: 4px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b25829;
+  background: rgba(228, 87, 46, 0.12);
+  border-radius: 4px;
+  padding: 2px 5px;
+  text-align: center;
 }
 
 .map-legend-item {
@@ -1576,5 +1635,264 @@ body {
   .riser,
   .statcard {
     transition: none;
+  }
+}
+
+
+/* ============================================================
+ * Nieuw: kaartbediening (vergrootglas, zoom, reset)
+ * ============================================================ */
+.map-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.map-ctrl {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0;
+  flex: none;
+  background: rgba(255, 255, 255, 0.96);
+  color: #0e1a36;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 8, 48, 0.32), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: transform 0.14s ease, background 0.14s ease, color 0.14s ease,
+    box-shadow 0.14s ease;
+  backdrop-filter: blur(6px);
+}
+
+.map-ctrl:hover {
+  background: #ffffff;
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 8, 48, 0.4);
+}
+
+.map-ctrl:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 8, 48, 0.32);
+}
+
+.map-ctrl:focus-visible {
+  outline: 3px solid var(--vaccin);
+  outline-offset: 2px;
+}
+
+.map-ctrl-magnifier {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(4, 19, 104, 0.45);
+}
+
+.map-ctrl-magnifier:hover {
+  background: #2a8aab;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.map-ctrl-magnifier[aria-expanded="true"] {
+  background: var(--besmet);
+  color: #ffffff;
+}
+
+.map-zoom-indicator {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0e1a36;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 8, 48, 0.28);
+  font-size: 0.62rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* ============================================================
+ * Vergrootglas / grote kaartweergave
+ * ============================================================ */
+.map-fullscreen-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: rgba(228, 87, 46, 0.95);
+  color: #ffffff;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 8, 48, 0.5);
+  cursor: pointer;
+  transition: transform 0.14s ease, background 0.14s ease;
+}
+
+.map-fullscreen-close:hover {
+  background: #c94825;
+  transform: translateY(-1px);
+}
+
+.map-fullscreen-close[hidden] {
+  display: none !important;
+}
+
+.map-stage.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(91, 179, 209, 0.18), transparent 55%),
+    radial-gradient(circle at 70% 85%, rgba(123, 97, 201, 0.16), transparent 60%),
+    linear-gradient(165deg, #051a52 0%, #041368 55%, #06103f 100%);
+  border-radius: 0;
+}
+
+.map-stage.is-fullscreen .map-controls {
+  top: 18px;
+  right: 18px;
+  gap: 8px;
+}
+
+.map-stage.is-fullscreen .map-ctrl {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+}
+
+.map-stage.is-fullscreen .map-ctrl-magnifier {
+  width: 50px;
+  height: 50px;
+  min-height: 50px;
+}
+
+.map-stage.is-fullscreen .map-zoom-indicator {
+  width: 44px;
+  height: 26px;
+  font-size: 0.7rem;
+}
+
+.map-stage.is-fullscreen #map-fullscreen-close {
+  display: grid !important;
+}
+
+.map-stage.is-fullscreen .map-legend {
+  right: 18px;
+  bottom: 18px;
+  padding: 11px 13px 10px;
+}
+
+.map-stage.is-fullscreen .map-layer-pill {
+  left: 18px;
+  bottom: 18px;
+}
+
+.map-stage.is-fullscreen .map-day-label {
+  top: 14px;
+  left: 18px;
+  font-size: 1rem;
+}
+
+body.map-fullscreen-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Bij fullscreen heeft de kaart meer ruimte — maak de provincies nét wat groter */
+.map-stage.is-fullscreen .nl-province-shape {
+  stroke-width: 0.6;
+}
+
+.map-stage.is-fullscreen .nl-province:hover .nl-province-shape,
+.map-stage.is-fullscreen .nl-province:focus-visible .nl-province-shape {
+  stroke-width: 1.6;
+}
+
+.map-stage.is-fullscreen .nl-province.is-selected .nl-province-shape {
+  stroke-width: 2.4;
+}
+
+/* ============================================================
+ * Mobiel: knoppen groter, geen horizontale overflow
+ * ============================================================ */
+@media (max-width: 480px) {
+  .map-ctrl {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .map-ctrl-magnifier {
+    width: 46px;
+    height: 46px;
+    min-height: 46px;
+  }
+
+  .map-zoom-indicator {
+    width: 40px;
+    height: 24px;
+    font-size: 0.64rem;
+  }
+
+  /* Bij fullscreen op mobiel: bediening iets groter voor duimvriendelijkheid */
+  .map-stage.is-fullscreen .map-ctrl {
+    width: 48px;
+    height: 48px;
+    min-height: 48px;
+  }
+
+  .map-stage.is-fullscreen .map-ctrl-magnifier {
+    width: 54px;
+    height: 54px;
+    min-height: 54px;
+  }
+
+  .map-stage.is-fullscreen .map-fullscreen-close {
+    width: 50px;
+    height: 50px;
+    top: 16px;
+    right: 16px;
+  }
+
+  .map-stage.is-fullscreen .map-controls {
+    top: 16px;
+    right: 16px;
+  }
+
+  /* Voorkom horizontale overflow */
+  .map-stage {
+    overflow: hidden;
+    max-width: 100%;
+  }
+}
+
+/* ============================================================
+ * Reduced motion
+ * ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .nl-province-shape,
+  .nl-pin-halo,
+  .map-ctrl,
+  .map-fullscreen-close {
+    animation: none !important;
+    transition: none !important;
   }
 }
